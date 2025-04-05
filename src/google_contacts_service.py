@@ -65,6 +65,11 @@ class GoogleContactsService:
         Raises:
             GoogleContactsError: If required environment variables are missing
         """
+        # Check if access token is available - if yes, use direct token authentication
+        access_token = os.environ.get("GOOGLE_ACCESS_TOKEN") or config.google_access_token
+        if access_token:
+            return cls.from_access_token(access_token, token_path)
+            
         client_id = os.environ.get("GOOGLE_CLIENT_ID") or config.google_client_id
         client_secret = os.environ.get("GOOGLE_CLIENT_SECRET") or config.google_client_secret
         
@@ -88,6 +93,24 @@ class GoogleContactsService:
         
         return cls(credentials_info, token_path)
     
+    @classmethod
+    def from_access_token(cls, access_token: str, token_path: Optional[Path] = None) -> 'GoogleContactsService':
+        """Create service instance directly from an access token.
+        
+        Args:
+            access_token: Google OAuth access token (bearer token)
+            token_path: Optional custom path to store the token
+            
+        Returns:
+            Configured GoogleContactsService instance
+        """
+        print("Authenticating with direct access token")
+        service = cls(None, token_path)
+        
+        # Instead of going through the normal auth flow, we'll create credentials directly from token
+        service.direct_access_token = access_token
+        return service
+    
     def _authenticate(self):
         """Authenticate with Google using credentials info.
         
@@ -98,6 +121,25 @@ class GoogleContactsService:
             GoogleContactsError: If authentication fails
         """
         try:
+            # First check if we're using direct access token authentication
+            if hasattr(self, 'direct_access_token'):
+                creds = Credentials(
+                    token=self.direct_access_token,
+                    scopes=config.scopes
+                )
+                print("Successfully authenticated with direct access token")
+                return build('people', 'v1', credentials=creds)
+            
+            # Check if access token is available from environment or config
+            access_token = os.environ.get("GOOGLE_ACCESS_TOKEN") or config.google_access_token
+            if access_token:
+                creds = Credentials(
+                    token=access_token,
+                    scopes=config.scopes
+                )
+                print("Successfully authenticated with access token from environment")
+                return build('people', 'v1', credentials=creds)
+            
             creds = None
             token_path = self.token_path
             
