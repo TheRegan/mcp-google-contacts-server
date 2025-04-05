@@ -17,6 +17,10 @@ class ContactsConfig(BaseModel):
         default=None,
         description="Google OAuth refresh token"
     )
+    google_access_token: Optional[str] = Field(
+        default=None,
+        description="Google OAuth access token (direct bearer token authentication)"
+    )
     credentials_paths: List[Path] = Field(
         default_factory=list,
         description="Paths to search for credentials.json file"
@@ -54,6 +58,7 @@ def load_config() -> ContactsConfig:
         google_client_id=os.environ.get("GOOGLE_CLIENT_ID"),
         google_client_secret=os.environ.get("GOOGLE_CLIENT_SECRET"),
         google_refresh_token=os.environ.get("GOOGLE_REFRESH_TOKEN"),
+        google_access_token=os.environ.get("GOOGLE_ACCESS_TOKEN"),
         credentials_paths=default_paths,
         token_path=token_dir / "token.json"
     )

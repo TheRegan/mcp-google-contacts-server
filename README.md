@@ -28,7 +28,7 @@ A Machine Conversation Protocol (MCP) server that provides Google Contacts funct
 
 2. Clone the repository:
    ```bash
-   git clone https://github.com/rayanzaki/mcp-google-contacts-server.git
+   git clone https://github.com/TheRegan/mcp-google-contacts-server.git
    cd mcp-google-contacts-server
    ```
 
@@ -43,7 +43,7 @@ A Machine Conversation Protocol (MCP) server that provides Google Contacts funct
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/rayanzaki/mcp-google-contacts-server.git
+   git clone https://github.com/TheRegan/mcp-google-contacts-server.git
    cd mcp-google-contacts-server
    ```
 
@@ -127,7 +127,7 @@ To use this server with MCP clients (like Anthropic's Claude with Cline), add it
          "--directory",
          "/path/to/mcp-google-contacts-server",
          "run",
-        "main.py"
+         "main.py"
       ],
       "disabled": false,
       "autoApprove": []

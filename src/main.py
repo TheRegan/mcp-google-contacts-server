@@ -47,6 +47,10 @@ def parse_args():
         help="Google OAuth refresh token (overrides environment variable)"
     )
     parser.add_argument(
+        "--access-token",
+        help="Google OAuth access token for direct bearer token authentication (overrides environment variable)"
+    )
+    parser.add_argument(
         "--credentials-file",
         help="Path to Google OAuth credentials.json file"
     )
@@ -66,6 +70,9 @@ def main():
         os.environ["GOOGLE_CLIENT_SECRET"] = args.client_secret
     if args.refresh_token:
         os.environ["GOOGLE_REFRESH_TOKEN"] = args.refresh_token
+    if args.access_token:
+        os.environ["GOOGLE_ACCESS_TOKEN"] = args.access_token
+        print("Using provided access token for authentication")
     
     # Handle credentials file argument
     if args.credentials_file:
@@ -89,8 +96,8 @@ def main():
     if not service:
         print("Warning: No valid Google credentials found. Authentication will be required.")
         print("You can provide credentials using environment variables or command line arguments:")
-        print("  GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN")
-        print("  --client-id, --client-secret, --refresh-token, --credentials-file")
+        print("  GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN, GOOGLE_ACCESS_TOKEN")
+        print("  --client-id, --client-secret, --refresh-token, --access-token, --credentials-file")
     
     # Run the MCP server with the specified transport
     if args.transport == "stdio":
